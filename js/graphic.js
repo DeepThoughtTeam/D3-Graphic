@@ -37,12 +37,18 @@ var force = d3.layout.force()
     .nodes(nodes)
     .links(links)
     .size([width, height])
-    .linkDistance(150)
+    .linkDistance(function(d){
+		var deltaX = d.target.x - d.source.x,
+        deltaY = d.target.y - d.source.y,
+        dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        return dist;})
 	.gravity(0)
     .charge(0)
-    .on('tick', tick)
+    .on('tick', tick)  // 'tick': how's updating every step
 
+//==========================
 // define arrow markers for graph links
+//==========================
 svg.append('svg:defs').append('svg:marker')
     .attr('id', 'end-arrow')
     .attr('viewBox', '0 -5 10 10')
