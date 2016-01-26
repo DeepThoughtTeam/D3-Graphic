@@ -39,9 +39,8 @@ var force = d3.layout.force()
     .size([width, height])
     .linkDistance(function(d){
 		var deltaX = d.target.x - d.source.x,
-        deltaY = d.target.y - d.source.y,
-        dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-        return dist;})
+        	deltaY = d.target.y - d.source.y;
+        return Math.sqrt(deltaX * deltaX + deltaY * deltaY);})
 	.gravity(0)
     .charge(0)
     .on('tick', tick)  // 'tick': how's updating every step
@@ -52,7 +51,7 @@ var force = d3.layout.force()
 svg.append('svg:defs').append('svg:marker')
     .attr('id', 'end-arrow')
     .attr('viewBox', '0 -5 10 10')
-    .attr('refX', 6)
+    .attr('refX', 6)  // markers postion at line
     .attr('markerWidth', 3)
     .attr('markerHeight', 3)
     .attr('orient', 'auto')
@@ -71,7 +70,9 @@ svg.append('svg:defs').append('svg:marker')
     .attr('d', 'M10,-5L0,0L10,5')
     .attr('fill', '#000');
 
+//==========================
 // line displayed when dragging new nodes
+//==========================
 var drag_line = svg.append('svg:path')
   .attr('class', 'link dragline hidden')
   .attr('d', 'M0,0L0,0');
@@ -98,7 +99,7 @@ var callbacks = [];
 // update force layout (called automatically each iteration)
 function tick() {
   // draw directed edges with proper padding from node centers
-  path.attr('d', function(d) {
+  path.attr('d', function(d) {	  
     var deltaX = d.target.x - d.source.x,
         deltaY = d.target.y - d.source.y,
         dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
@@ -115,7 +116,7 @@ function tick() {
 
   circle.attr('transform', function(d) {
     return 'translate(' + d.x + ',' + d.y + ')';
-  });
+  });	
 }
 
 // update graph (called when needed)
