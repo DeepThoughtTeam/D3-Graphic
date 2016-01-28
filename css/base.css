@@ -2,14 +2,15 @@ body {
   font-family: "Exo 2", "Helvetica Neue", Helvetica, sans-serif;
   background: #FDF6E3;
   color: #475B62;
-  margin: auto;
 }
-  
+.json{
+  width: 45%;
+  float: left;
+  padding: 10px;
+}
+
 h1, h2{
   color: #CB4B19;
   text-align: center;
 }
    
-#graphic {
-  margin: 0 auto;
-}
