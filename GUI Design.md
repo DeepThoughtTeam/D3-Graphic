@@ -69,34 +69,36 @@ Each element has their own properties:
 
 * UI calculates layers and validate the network
 
-!!    !!@-@!! !! If invalid, show error message
-!!    !!@-@!! !! If valid, pass JSON to communication server
+- If invalid, show error message
+
+- If valid, pass JSON to communication server
 
 ### 2.2 Design Complex networks: 
 
-* User use/define network template
++ User use/define network template
 
-* User drag/drop layers
++ User drag/drop layers
 
-* User define layer properties
++ User define layer properties
 
-* User connect layers with arrows
++ User connect layers with arrows
 
-* User define connection properties
++ User define connection properties
 
-* User define nested layer
++ User define nested layer
 
-* UI calculates layers and validate the network
++ UI calculates layers and validate the network
 
-!!    !!@-@!! !! If invalid, show error message
-!!    !!@-@!! !! If valid, pass JSON to communication server
+- If invalid, show error message
+
+- If valid, pass JSON to communication server
 
 
 ## 3. Layout Design
 
 Ref: https://cacoo.com/diagrams/# 
 
-<img src="layout_01.png" width="400" height="100">
+<img src="layout_01.png" width="1100" height="600">
 
 
 
