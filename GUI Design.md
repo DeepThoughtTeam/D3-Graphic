@@ -31,7 +31,7 @@ The following elements are used to represent the network:
 
 Each element has their own properties: 
 
-** Node: **
+**Node:**
 ```
 	id,
 	(x,y), radius,
@@ -39,7 +39,7 @@ Each element has their own properties:
 	next_connection (list of neuron id)
 ```
 
-** Layer: **
+**Layer:**
 ```
 	id,
 	layer_list, (for nested layers when user specifies)
@@ -48,7 +48,7 @@ Each element has their own properties:
 	get_node (get information of a neuron from a layer, visualization)
 ```
 		
-** Arrow: **
+**Arrow:**
 ```
 	(id1, id2)
 ```
@@ -69,8 +69,8 @@ Each element has their own properties:
 
 * UI calculates layers and validate the network
 
-** If invalid, show error message
-** If valid, pass JSON to communication server
+!!    !!@-@!! !! If invalid, show error message
+!!    !!@-@!! !! If valid, pass JSON to communication server
 
 ### 2.2 Design Complex networks: 
 
@@ -88,15 +88,15 @@ Each element has their own properties:
 
 * UI calculates layers and validate the network
 
-** If invalid, show error message
-** If valid, pass JSON to communication server
+!!    !!@-@!! !! If invalid, show error message
+!!    !!@-@!! !! If valid, pass JSON to communication server
 
 
 ## 3. Layout Design
 
 Ref: https://cacoo.com/diagrams/# 
 
-![image](file: layout_01.png)
+<img src="layout_01.png" width="400" height="100">
 
 
 
