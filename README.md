@@ -10,4 +10,6 @@ Bhkisha Raj, Rita Singh
 
 Wei Jiang (Team Lead), Jingwei Li, Rui Wang, Xi Liu Xinyun Zhao, Xiangzhu Long, Yichen Cai
 
+## [Demo Day Presentation](https://docs.google.com/presentation/d/1V_JC7z_xxNAV-JFmKlpWs6FCLVP2aCoeuYOM1R0s2Ys/edit#slide=id.geb073114e_0_0) (Dec, 7th, 2015)
+
 
