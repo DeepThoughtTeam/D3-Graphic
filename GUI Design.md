@@ -69,9 +69,9 @@ Each element has their own properties:
 
 * UI calculates layers and validate the network
 
-- If invalid, show error message
+  - If invalid, show error message
 
-- If valid, pass JSON to communication server
+  - If valid, pass JSON to communication server
 
 ### 2.2 Design Complex networks: 
 
@@ -89,9 +89,9 @@ Each element has their own properties:
 
 + UI calculates layers and validate the network
 
-- If invalid, show error message
+  - If invalid, show error message
 
-- If valid, pass JSON to communication server
+  - If valid, pass JSON to communication server
 
 
 ## 3. Layout Design
