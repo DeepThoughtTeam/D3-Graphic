@@ -77,7 +77,8 @@ System setup should be done before users start use. Users don’t need to setup 
    * The system generate new datasets following users instructions
 
 5. Experiment multiple algorithms
-	 The interaction is very similar to UC3. 
+	 
+   The interaction is very similar to UC3. 
    * User finalizes the neural networks.
    * User specifies the the algorithms of interest.
    * User submits request.
