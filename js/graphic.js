@@ -317,6 +317,7 @@ function mousedown() {
 
   node.x = point[0];
   node.y = point[1];
+<<<<<<< Updated upstream
 
 
   for(var i = 0; i< nodes.length; i++){
@@ -337,6 +338,30 @@ function mousedown() {
   
   nodes.push(node);
   restart();
+=======
+  
+  // check whether it collides with other nodes
+  var idx = 0,
+  	  d = 24,
+	  collide = 0;
+	
+  while (++idx < nodes.length) {
+    if (nodes[idx] != node) {
+	  var xx = node.x - nodes[idx].x,
+          yy = node.y - nodes[idx].y,
+          l = Math.sqrt(xx * xx + yy * yy);
+      if (l < d) {
+		  collide = 1;
+		  lastNodeId--;
+	  }
+    }
+  }
+	
+  if(collide == 0) {
+	  nodes.push(node);
+	  restart();
+  }  
+>>>>>>> Stashed changes
 }
 
 function mousemove() {
