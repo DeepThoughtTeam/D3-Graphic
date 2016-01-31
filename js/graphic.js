@@ -1,34 +1,70 @@
 //==========================
-// set up SVG for D3
-//==========================
-var width  = 960,
-    height = 500,
-    colors = d3.scale.category10();
-
-var svg = d3.select('#draw')
-  .append('svg')
-  .attr('oncontextmenu', 'return false;') // disable right-click content menue
-  .attr('width', width)
-  .attr('height', height);
-
-//==========================
 // set up initial nodes and links
 //  - nodes are known by 'id', not by index in array.
 //  - reflexive edges are indicated on the node (as a bold black circle).
 //  - links are always source < target; 
 //  - edge directions (saw in the UI) are set by 'left' and 'right'.
 //==========================
-var nodes = [
-    {id: 0, reflexive: false},
-    {id: 1, reflexive: true },
-    {id: 2, reflexive: false}
-  ],
-  lastNodeId = 2,
-  links = [
-    {source: nodes[0], target: nodes[1], left: false, right: true },
-    {source: nodes[1], target: nodes[2], left: false, right: true }
-  ];
+// var nodes = [
+//     {id: 0, reflexive: false},
+//     {id: 1, reflexive: true },
+//     {id: 2, reflexive: false}
+//   ],
+//   lastNodeId = 2,
+//   links = [
+//     {source: nodes[0], target: nodes[1], left: false, right: true },
+//     {source: nodes[1], target: nodes[2], left: false, right: true }
+//   ];
+var nodes = [], lastNodeId = -1, links = [];
+//==========================
+// set up SVG for D3
+//==========================
+var width  = 960,
+    height = 500,
+    colors = d3.scale.category10();
+var layers = [];
+var svg = d3.select('#draw')
+  .on("keydown.brush", keydown)
+  .on("keyup.brush", keyup)
+  .each(function() { this.focus(); })
+  .attr('oncontextmenu', 'return false;') // disable right-click content menue
+  .append('svg')
+  .attr('width', width)
+  .attr('height', height);
 
+var brush = svg.append("g")
+    .datum(function() { return {selected: false, previouslySelected: false}; })
+    .attr("class", "brush"),
+
+    brusher = d3.svg.brush()
+        .x(d3.scale.identity().domain([0, width]))
+        .y(d3.scale.identity().domain([0, height]))
+        .on("brushstart", function(d) {
+          nodes.each(function(d) {
+           d.previouslySelected = shiftKey && d.selected; });
+        })
+        .on("brush", function() {
+          var extent = d3.event.target.extent();
+          nodes.classed("selected", function(d) {
+            return d.selected = d.previouslySelected ^
+                (extent[0][0] <= d.x && d.x < extent[1][0]
+                && extent[0][1] <= d.y && d.y < extent[1][1]);
+          });
+        })
+        .on("brushend", function() {
+          d3.event.target.clear();
+          d3.select(this).call(d3.event.target);
+          cur_layer = d3.selectAll('.node').classed('selected');
+          layers.append(cur_layer);
+          document.getElementById('view_select').innerHTML = JSON.stringify(layers, null, 1);
+        });
+    brush.call(brusher)
+      .on("mousedown.brush", null)
+      .on("touchstart.brush", null) 
+      .on("touchmove.brush", null)
+      .on("touchend.brush", null); 
+
+    brush.select('.background').style('cursor', 'default');
 
 //==========================
 // init D3 force layout
@@ -41,7 +77,7 @@ var force = d3.layout.force()
 		var deltaX = d.target.x - d.source.x,
         	deltaY = d.target.y - d.source.y;
         return Math.sqrt(deltaX * deltaX + deltaY * deltaY);})
-	.gravity(0)
+	  .gravity(0)
     .charge(0)
     .on('tick', tick)  // 'tick': how's updating every step
 
@@ -146,19 +182,16 @@ function restart() {
     .style('marker-start', function(d) { return d.left ? 'url(#start-arrow)' : ''; })
     .style('marker-end', function(d) { return d.right ? 'url(#end-arrow)' : ''; })
     .on('mousedown', function(d) {
-      if(d3.event.ctrlKey) return;
-
+      if(d3.event.ctrlKey || d3.event.shiftKey) return;
       // select link
       mousedown_link = d;
-      if(mousedown_link === selected_link) selected_link = null;
-      else selected_link = mousedown_link;
+      selected_link = (mousedown_link === selected_link)? null: mousedown_link;  
       selected_node = null;
       restart();
     });
 
   // remove old links
   path.exit().remove();
-
 
   // circle (node) group
   // NB: the function arg is crucial here! nodes are known by id, not by index!
@@ -175,13 +208,10 @@ function restart() {
   g.append('svg:circle')
     .attr('class', 'node')
     .attr('r', 12)
+    .attr('selected', false)
     .style('fill', function(d) { return (d === selected_node) ? d3.rgb(colors(d.id)).brighter().toString() : colors(d.id); })
     .style('stroke', function(d) { return d3.rgb(colors(d.id)).darker().toString(); })
     .classed('reflexive', function(d) { return d.reflexive; })
-    .on("click", function(d){
-      // output selected neuron info
-      document.getElementById('view_select').innerHTML = JSON.stringify(this, null, 1);
-    })
     .on('mouseover', function(d) {
       if(!mousedown_node || d === mousedown_node) return;
       // enlarge target node
@@ -195,10 +225,17 @@ function restart() {
     .on('mousedown', function(d) {
       if(d3.event.ctrlKey) return;
 
+      if (d3.event.shiftKey) return;
+      
       // select node
       mousedown_node = d;
-      if(mousedown_node === selected_node) selected_node = null;
-      else selected_node = mousedown_node;
+    
+      if(mousedown_node === selected_node){
+        selected_node = null;
+      }else{
+        selected_node = mousedown_node;
+        document.getElementById('view_select').innerHTML = JSON.stringify(selected_node, null, 1);
+      }
       selected_link = null;
 
       // reposition drag line
@@ -265,8 +302,7 @@ function restart() {
 
   // remove old nodes
   circle.exit().remove();
-
-
+  
   // output graph structs
   document.getElementById('view_json').innerHTML = JSON.stringify({neurons:nodes, connects:links}, null, 1);
   // set the graph in motion
@@ -275,12 +311,12 @@ function restart() {
 
 function mousedown() {
   // prevent I-bar on drag
-  //d3.event.preventDefault();
+  d3.event.preventDefault();
 
   // because :active only works in WebKit?
   svg.classed('active', true);
 
-  if(d3.event.ctrlKey || mousedown_node || mousedown_link) return;
+  if(d3.event.ctrlKey || d3.event.shiftKey  || mousedown_node || mousedown_link) return;
   
   // insert new node at point
   var point = d3.mouse(this),
@@ -369,6 +405,12 @@ function keydown() {
     svg.classed('ctrl', true);
   }
 
+  if (d3.event.shiftKey){
+    svg.classed('shift', true);
+    d3.select('svg').select('.background').style('cursor', 'crosshair');
+    brush.call(brusher);
+  }
+
   if(!selected_node && !selected_link) return;
   switch(d3.event.keyCode) {
     case 8: // backspace
@@ -415,7 +457,6 @@ function keydown() {
 
 function keyup() {
   lastKeyDown = -1;
-
   // ctrl
   if(d3.event.keyCode === 17) {
     circle
@@ -423,12 +464,24 @@ function keyup() {
       .on('touchstart.drag', null);
     svg.classed('ctrl', false);
   }
+  // shift
+  else if (d3.event.keyCode === 16){
+    svg.classed('shift', false);
+    brush.select('.background').style('cursor', 'default');
+    shiftKey = false;
+  }
+  brush.call(brusher)
+    .on("mouseup.brush", null)
+    .on('mousemove.brush', null)
+    .on('drag.brush', null)
+    .on("mousedown.brush", null);
 }
 
 // app starts here
 svg.on('mousedown', mousedown)
   .on('mousemove', mousemove)
   .on('mouseup', mouseup);
+
 d3.select(window)
   .on('keydown', keydown)
   .on('keyup', keyup);
