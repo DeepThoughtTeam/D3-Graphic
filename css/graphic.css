@@ -8,11 +8,18 @@ body {
 }
 
 
-#button{
+#button1{
   position:relative; 
   top:20px; 
   left:900px; 
 }
+
+#button2{
+  position:relative; 
+  top:20px; 
+  left:900px; 
+}
+
 
 
 svg {

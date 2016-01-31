@@ -38,10 +38,10 @@ var force = d3.layout.force()
     .links(links)
     .size([width, height])
     .linkDistance(function(d){
-		var deltaX = d.target.x - d.source.x,
+		 var deltaX = d.target.x - d.source.x,
         	deltaY = d.target.y - d.source.y;
         return Math.sqrt(deltaX * deltaX + deltaY * deltaY);})
-	.gravity(0)
+	  .gravity(0)
     .charge(0)
     .on('tick', tick)  // 'tick': how's updating every step
 
@@ -155,7 +155,7 @@ function restart() {
   // NB: the function arg is crucial here! nodes are known by id, not by index!
   circle = circle.data(nodes, function(d) { return d.id; });
 
-  // update existing nodes (reflexive & selected visual states)
+ // update existing nodes (reflexive & selected visual states)
   circle.selectAll('circle')
     .style('fill', function(d) { return (d === selected_node) ? d3.rgb(colors(d.id)).brighter().toString() : colors(d.id); })
     .classed('reflexive', function(d) { return d.reflexive; });
@@ -190,7 +190,7 @@ function restart() {
       mousedown_node = d;
       if(mousedown_node === selected_node) selected_node = null;
       else selected_node = mousedown_node;
-      selected_link = null;
+      selected_link = null
 
       // reposition drag line
       drag_line
@@ -279,8 +279,24 @@ function mousedown() {
       node = {id: ++lastNodeId, reflexive: false};
   node.x = point[0];
   node.y = point[1];
-  nodes.push(node);
 
+  for(var i = 0; i< nodes.length; i++){
+
+      var temp = nodes[i];
+      var distx = node.x - temp.x;
+      var disty = node.y - temp.y;
+
+      var d = Math.sqrt(distx*distx + disty*disty);
+
+      if(d < 24){
+        lastNodeId --;
+
+        return;
+      }
+
+  }
+  
+  nodes.push(node);
   restart();
 }
 
