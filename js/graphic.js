@@ -133,15 +133,7 @@ function resetMouseVars() {
 var callbacks = [];
 
 // update force layout (called automatically each iteration)
-function tick() {
-  var q = d3.geom.quadtree(nodes),
-	  i = 0,
-	  n = nodes.length;
-	
-  while (++i < n) {
-    q.visit(collide(nodes[i]));
-  }
-	
+function tick() {	
   // draw directed edges with proper padding from node centers
   path.attr('d', function(d) {	  
     var deltaX = d.target.x - d.source.x,
@@ -324,38 +316,26 @@ function mousedown() {
 
   node.x = point[0];
   node.y = point[1];
-  nodes.push(node);
+  
+  // check whether it collides with other nodes
+  var idx = 0,
+  	  d = 28,
+	  collide = 0;
+	
+  while (++idx < nodes.length) {
+    if (nodes[idx] !== node) {
+	  var xx = node.x - nodes[idx].x,
+          yy = node.y - nodes[idx].y,
+          l = Math.sqrt(xx * xx + yy * yy);
+      if (l < d) collide = 1;
+    }
+  }
+	
+  if(collide == 0)
+	  nodes.push(node);
 
   restart();
 }
-
-var radius = 25;
-
-function collide(node) {
-  var r = radius + 3,
-      nx1 = node.x - r,
-      nx2 = node.x + r,
-      ny1 = node.y - r,
-      ny2 = node.y + r;
-	
-  return function(quad, x1, y1, x2, y2) {
-    if (quad.point && (quad.point !== node)) {
-      var x = node.x - quad.point.x,
-          y = node.y - quad.point.y,
-          l = Math.sqrt(x * x + y * y),
-          r = 2 * radius;
-      if (l < r) {
-        l = (l - r) / (2*l) * .0001;
-        node.x -= x*l;
-        node.y -= y*l;
-        quad.point.x += x*l;
-        quad.point.y += y*l;
-      }
-    }
-    return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
-  };
-}
-
 
 function mousemove() {
   if(!mousedown_node) return;
