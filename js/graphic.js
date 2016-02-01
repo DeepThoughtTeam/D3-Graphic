@@ -89,7 +89,7 @@ var force = d3.layout.force()
     .links(links)
     .size([width, height])
     .linkDistance(function(d){
-		var deltaX = d.target.x - d.source.x,
+		 var deltaX = d.target.x - d.source.x,
         	deltaY = d.target.y - d.source.y;
         return Math.sqrt(deltaX * deltaX + deltaY * deltaY);})
 	  .gravity(0)
@@ -148,15 +148,7 @@ function resetMouseVars() {
 var callbacks = [];
 
 // update force layout (called automatically each iteration)
-function tick() {
-  var q = d3.geom.quadtree(nodes),
-	  i = 0,
-	  n = nodes.length;
-	
-  while (++i < n) {
-    q.visit(collide(nodes[i]));
-  }
-	
+function tick() {	
   // draw directed edges with proper padding from node centers
   path.attr('d', function(d) {	  
     var deltaX = d.target.x - d.source.x,
@@ -212,7 +204,7 @@ function restart() {
   // NB: the function arg is crucial here! nodes are known by id, not by index!
   circle = circle.data(nodes, function(d) { return d.id; });
 
-  // update existing nodes (reflexive & selected visual states)
+ // update existing nodes (reflexive & selected visual states)
   circle.selectAll('circle')
     .style('fill', function(d) { return (d === selected_node) ? d3.rgb(colors(d.id)).brighter().toString() : colors(d.id); })
     .classed('reflexive', function(d) { return d.reflexive; });
@@ -246,6 +238,7 @@ function restart() {
       
       // select node
       mousedown_node = d;
+
     
       if(mousedown_node === selected_node){
         selected_node = null;
@@ -341,38 +334,29 @@ function mousedown() {
 
   node.x = point[0];
   node.y = point[1];
-  nodes.push(node);
 
-  restart();
-}
 
-var radius = 25;
+  for(var i = 0; i< nodes.length; i++){
 
-function collide(node) {
-  var r = radius + 3,
-      nx1 = node.x - r,
-      nx2 = node.x + r,
-      ny1 = node.y - r,
-      ny2 = node.y + r;
-	
-  return function(quad, x1, y1, x2, y2) {
-    if (quad.point && (quad.point !== node)) {
-      var x = node.x - quad.point.x,
-          y = node.y - quad.point.y,
-          l = Math.sqrt(x * x + y * y),
-          r = 2 * radius;
-      if (l < r) {
-        l = (l - r) / (2*l) * .0001;
-        node.x -= x*l;
-        node.y -= y*l;
-        quad.point.x += x*l;
-        quad.point.y += y*l;
+      var temp = nodes[i];
+      var distx = node.x - temp.x;
+      var disty = node.y - temp.y;
+
+      var d = Math.sqrt(distx*distx + disty*disty);
+
+      if(d < 24){
+        lastNodeId --;
+
+        return;
       }
-    }
-    return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
-  };
-}
 
+  }
+  
+  nodes.push(node);
+  restart();
+  
+
+}
 
 function mousemove() {
   if(!mousedown_node) return;
