@@ -234,3 +234,28 @@ function FullyConnect() {
 
 }
 
+function Send(){
+
+    var nodes = [
+        {layer1 : 5},
+        {layer2 : 3}
+    ];
+
+
+    $.post("http://127.0.0.1:8000/dashboard/send-net-info/" , JSON.stringify(nodes)).done(function(data) {
+      console.log(data);
+    });
+
+    // $.ajax({
+    //   type: 'POST',
+    //   url: 'http://127.0.0.1:8000/dashboard/send-net-info/',
+    //   data: nodes,
+    //   dataType: 'json',
+    //   async: false,
+    //   success: function(data) {
+    //     console.log(data);
+    //   }
+    // });
+
+}
+

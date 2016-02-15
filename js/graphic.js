@@ -2,7 +2,7 @@
 // set up initial nodes and links
 //  - nodes are known by 'id', not by index in array.
 //  - reflexive edges are indicated on the node (as a bold black circle).
-//  - links are always source < target; 
+//  - links are always source < target;
 //  - edge directions (saw in the UI) are set by 'left' and 'right'.
 //==========================
 // var nodes = [
@@ -16,6 +16,15 @@
 //     {source: nodes[1], target: nodes[2], left: false, right: true }
 //   ];
 var nodes = [], lastNodeId = -1, links = [];
+
+var tooltip  = d3.select('body').append('div')
+    .attr('class', 'tooltip')
+    .style('position', 'absolute')
+    .style('padding','0 10px')
+    .style('background','white')
+    .style('opacity', 0);
+
+
 //==========================
 // set up SVG for D3
 //==========================
@@ -60,9 +69,9 @@ var brush = svg.append("g")
         });
     brush.call(brusher)
       .on("mousedown.brush", null)
-      .on("touchstart.brush", null) 
+      .on("touchstart.brush", null)
       .on("touchmove.brush", null)
-      .on("touchend.brush", null); 
+      .on("touchend.brush", null);
 
     brush.select('.background').style('cursor', 'default');
 
@@ -133,9 +142,9 @@ function resetMouseVars() {
 var callbacks = [];
 
 // update force layout (called automatically each iteration)
-function tick() {	
+function tick() {
   // draw directed edges with proper padding from node centers
-  path.attr('d', function(d) {	  
+  path.attr('d', function(d) {
     var deltaX = d.target.x - d.source.x,
         deltaY = d.target.y - d.source.y,
         dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
@@ -152,8 +161,8 @@ function tick() {
 
   circle.attr('transform', function(d) {
     return 'translate(' + d.x + ',' + d.y + ')';
-  });	
-	
+  });
+
 }
 
 // update graph (called when needed)
@@ -177,7 +186,7 @@ function restart() {
       if(d3.event.ctrlKey || d3.event.shiftKey) return;
       // select link
       mousedown_link = d;
-      selected_link = (mousedown_link === selected_link)? null: mousedown_link;  
+      selected_link = (mousedown_link === selected_link)? null: mousedown_link;
       selected_node = null;
       restart();
     });
@@ -205,24 +214,35 @@ function restart() {
     .style('stroke', function(d) { return d3.rgb(colors(d.id)).darker().toString(); })
     .classed('reflexive', function(d) { return d.reflexive; })
     .on('mouseover', function(d) {
-      if(!mousedown_node || d === mousedown_node) return;
+    //  if(!mousedown_node || d === mousedown_node) return;
       // enlarge target node
-      d3.select(this).attr('transform', 'scale(1.1)');
+   //    d3.select(this).attr('transform', 'scale(1.1)');
+
+      tooltip.transition().style('opacity', .9);
+
+      var content = "id: " + d.id + "\n" + "px: " + d.x + "\n" + "py: " + d.y;
+
+      tooltip.html(content)
+             .style('left', (d3.event.pageX) + 'px')
+             .style('top', (d3.event.pageY) + 'px');
     })
     .on('mouseout', function(d) {
-      if(!mousedown_node || d === mousedown_node) return;
+    //  if(!mousedown_node || d === mousedown_node) return;
       // unenlarge target node
-      d3.select(this).attr('transform', '');
+    //  d3.select(this).attr('transform', '');
+
+      tooltip.transition().style('opacity', 0);
+
     })
     .on('mousedown', function(d) {
       if(d3.event.ctrlKey) return;
 
       if (d3.event.shiftKey) return;
-      
+
       // select node
       mousedown_node = d;
 
-    
+
       if(mousedown_node === selected_node){
         selected_node = null;
       }else{
@@ -295,7 +315,7 @@ function restart() {
 
   // remove old nodes
   circle.exit().remove();
-  
+
   // output graph structs
   document.getElementById('view_json').innerHTML = JSON.stringify({neurons:nodes, connects:links}, null, 1);
   // set the graph in motion
@@ -310,7 +330,7 @@ function mousedown() {
   svg.classed('active', true);
 
   if(d3.event.ctrlKey || d3.event.shiftKey  || mousedown_node || mousedown_link) return;
-  
+
   // insert new node at point
   var point = d3.mouse(this),
 	  node = {id: ++lastNodeId, reflexive: false};
@@ -318,7 +338,7 @@ function mousedown() {
   node.x = point[0];
   node.y = point[1];
 
-
+  // avoid overlap nodes
   for(var i = 0; i< nodes.length; i++){
 
       var temp = nodes[i];
@@ -334,10 +354,10 @@ function mousedown() {
       }
 
   }
-  
+
   nodes.push(node);
   restart();
-  
+
 
 }
 
