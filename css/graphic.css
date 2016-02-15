@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 body {
   width: 1024px;
 }
@@ -26,6 +27,7 @@ div.tooltip{
   top:20px;
   left:900px;
 }
+
 
 svg {
   background-color: #FFF;
@@ -77,7 +79,9 @@ circle.node {
 }
 
 circle.node.reflexive {
+
   stroke: #000
+
   stroke-width: 2.5px;
 }
 circle.node.selected {
