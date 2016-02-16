@@ -9,7 +9,7 @@ body {
 }
 
 div.tooltip{
-    border: 1px solid red;
+    border: 1px solid blue;
     width: 100px;
     height: 100px;
     word-break: break-all;

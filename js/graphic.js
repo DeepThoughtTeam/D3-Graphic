@@ -78,7 +78,11 @@ var brusher = d3.svg.brush()
             return (d.selected)? 'red': d3.rgb(colors(d.id)).darker().toString();
           })
 
-          layers.push(cur_layer);
+          //layers.push(cur_layer);
+          for (var i = 1; i < cur_layer.length; i++){
+            ids += ", " + cur_layer[i].id;
+          }
+          document.getElementById('view_select').innerHTML = '<p>'+flatLayer(cur_layer)+'<button onclick = "groupNodes(cur_layer)" >Group</button></p>';
           document.getElementById('view_layers').innerHTML = JSON.stringify(layers, null, 1);
         }),
     brush = svg.append("g")
@@ -92,6 +96,34 @@ var brusher = d3.svg.brush()
       .on("touchend.brush", null);
 
     brush.select('.background').style('cursor', 'default');
+
+function flatLayer(layer){
+  if (layer.length == 0){
+    return "";
+  }
+  ids = cur_layer[0].id;
+  for (var i = 1; i < cur_layer.length; i++){
+    ids += ", " + cur_layer[i].id;      
+  }
+  return ids;
+}
+
+function groupNodes(layer){
+  layers.push(layer);
+  document.getElementById('view_select').innerHTML = '';
+  d3.selectAll('circle').style('stroke', function(d) {
+            return d3.rgb(colors(d.id)).darker().toString();})
+  document.getElementById('view_layers').innerHTML = displayLayers();
+  //document.getElementById('view_layers').innerHTML = JSON.stringify(layers, null, 1);
+}
+
+function displayLayers(){
+  str = "";
+  for (var i = 0; i < layers.length; i++){
+
+    str += "<p>"+flatLayer(layers[i])+"<button onclick = 'function setStart("+layers[i]+"){}'>Start</button><button onclick = >End</button></p>" 
+  }
+}
 
 //==========================
 // init D3 force layout
