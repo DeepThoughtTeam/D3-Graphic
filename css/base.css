@@ -13,9 +13,3 @@ h1, h2, h3, #draw{
   height: auto;
   float: left;
 }
-
-#button{
-  position:relative; 
-  top:20px; 
-  left:900px; 
-}

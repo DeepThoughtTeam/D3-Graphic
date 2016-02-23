@@ -80,7 +80,7 @@ var brusher = d3.svg.brush()
 
           //layers.push(cur_layer);
           document.getElementById('view_select').innerHTML = '<p>'+flatLayer(cur_layer)+'<button onclick = "groupNodes(cur_layer)" >Group</button></p>';
-          //document.getElementById('view_layers').innerHTML = JSON.stringify(layers, null, 1);
+          document.getElementById('view_layers').innerHTML = JSON.stringify(layers, null, 1);
         }),
     brush = svg.append("g")
       .datum(function() { return {selected: false, previouslySelected: false}; })
@@ -379,7 +379,7 @@ function restart() {
   circle.exit().remove();
 
   // output graph structs
-  document.getElementById('view_json').innerHTML = JSON.stringify({neurons:nodes, connects:links}, null, 1);
+  //document.getElementById('view_json').innerHTML = JSON.stringify({neurons:nodes, connects:links}, null, 1);
   // set the graph in motion
   force.start();
 }
@@ -541,6 +541,32 @@ function keyup() {
     .on('mousemove.brush', null)
     .on('drag.brush', null)
     .on("mousedown.brush", null);
+}
+
+function FullyConnect(){
+  
+}
+function generateLayers(){
+  content = document.getElementById('layers').value;
+  if ( content.length < 2 || (!(content.startsWith('[') && content.endsWith(']')))){
+    alert("invalid input!");
+    return;
+  }
+  content = content.substring(1, content.length-1); 
+  layers = content.split(',')
+  for (i = 0; i < layers.length; i++){
+    cur_layer = [];
+    len = parseInt(layers[i]);
+    for (j = 0; j < len; j++){
+      node = {id: 0, reflexive: false};
+      nodes.push(node);
+      cur_layer.push(node); 
+    }
+    layers.push(cur_layer.slice());
+    if (i > 0){
+      FullyConnect(layers[i-1], layers[i]);
+    }
+  }
 }
 
 // app starts here
