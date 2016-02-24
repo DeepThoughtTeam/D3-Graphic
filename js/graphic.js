@@ -113,7 +113,7 @@ function displayLayers(layers){
 }
 
 function groupNodes(layer){
-  layers.push(layer);
+  layers.push(layer.slice());
   document.getElementById('view_select').innerHTML = '';
   d3.selectAll('circle').style('stroke', function(d) {
             return d3.rgb(colors(d.id)).darker().toString();})
