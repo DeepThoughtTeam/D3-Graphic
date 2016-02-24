@@ -7,28 +7,33 @@
     <script src="js/d3.min.js"></script>
     <script type="text/javascript">
       function clearTextarea(){
-        document.getElementById('layers').value = ''; 
-        document.getElementById('layers').readonly = false; 
-        
+        document.getElementById('layers').value = '';
+        document.getElementById('layers').readonly = false;
+
       }
     </script>>
   </head>
-  
+
   <body>
-	
+
     <div id = 'draw'>
 	  <h1>Deep Thought</h1>
 
 	   </div>
-	  
+
+     <div id = 'buttons'>
+         <button id = 'button1' onclick="FullyConnect()">Connect</button>
+         <button id = 'button2' onclick="Send()">Send</button>
+     </div>
+
     <div class = 'json'>
   	  <h2>Network JSON</h2>
 
       <textarea id = "layers" rows="4" cols="40" onclick="clearTextarea()">[2, 3, 4]</textarea>
-      <button onclick="generateLayers()">Submit</button>  
+      <button onclick="generateLayers()">Submit</button>
       <pre id = 'view_layers'></pre>
   	</div>
-	  
+
     <div class = 'json'>
   	  <h2>Selected</h2>
   	  <pre id = 'view_select'></pre>
@@ -38,10 +43,10 @@
       <h2>Layers</h2>
       <pre id = 'view_layers'></pre>
     </div>
-	  
+
     <script src="js/graphic.js"></script>
-    
+
   </body>
- 
+
 
 </html>

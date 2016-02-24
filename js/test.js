@@ -15,7 +15,7 @@ var svg = d3.select('#draw')
 // set up initial nodes and links
 //  - nodes are known by 'id', not by index in array.
 //  - reflexive edges are indicated on the node (as a bold black circle).
-//  - links are always source < target; 
+//  - links are always source < target;
 //  - edge directions (saw in the UI) are set by 'left' and 'right'.
 //==========================
 var nodes = [
@@ -112,7 +112,7 @@ var selected_node = null,
 // update force layout (called automatically each iteration)
 function tick() {
   // draw directed edges with proper padding from node centers
-  // path.attr('d', function(d) {    
+  // path.attr('d', function(d) {
   //   var deltaX = d.target.x - d.source.x,
   //       deltaY = d.target.y - d.source.y,
   //       dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
@@ -129,7 +129,7 @@ function tick() {
 
   circle.attr('transform', function(d) {
     return 'translate(' + d.x + ',' + d.y + ')';
-  }); 
+  });
 }
 
 
@@ -215,7 +215,7 @@ function FullyConnect() {
   }
 
       // draw directed edges with proper padding from node centers
-  path.attr('d', function(d) {    
+  path.attr('d', function(d) {
     var deltaX = d.target.x - d.source.x,
         deltaY = d.target.y - d.source.y,
         dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
@@ -258,4 +258,3 @@ function Send(){
     // });
 
 }
-
