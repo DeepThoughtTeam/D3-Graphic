@@ -279,7 +279,7 @@ function restart() {
     //  if(!mousedown_node || d === mousedown_node) return;
       // enlarge target node
    //    d3.select(this).attr('transform', 'scale(1.1)');
-      if(!d3.event.ctrlKey) return;
+      if(!d3.event.altKey) return;
 
       tooltip.transition().style('opacity', .9);
 
@@ -472,6 +472,11 @@ function keydown() {
     svg.classed('ctrl', true);
   }
 
+  //alert
+  if(d3.event.keyCode === 18){
+    svg.classed('alt', true);
+  }
+
   if (d3.event.shiftKey){
     svg.classed('shift', true);
     d3.select('svg').select('.background').style('cursor', 'crosshair');
@@ -531,6 +536,12 @@ function keyup() {
       .on('touchstart.drag', null);
     svg.classed('ctrl', false);
   }
+  //alt
+  if(d3.event.keyCode === 18) {
+
+    svg.classed('alt', false);
+  }
+
   // shift
   else if (d3.event.keyCode === 16){
     svg.classed('shift', false);
@@ -580,7 +591,7 @@ restart();
 
 
 
-var layers_links = [];
+//var layers_links = [];
 
 function createLinks(layer_source, layer_target){
 
@@ -591,9 +602,11 @@ function createLinks(layer_source, layer_target){
         for(var j = 0; j<layer_target.length; j++){
 
             var t = layer_target[j];
-            layers_links.push({
+            links.push({
               source : s,
-              target : t
+              target : t,
+              left : false,
+              right : true
             });
         }
    }
@@ -605,23 +618,25 @@ var connect = 0;
 function FullyConnect() {
 
   createLinks(startLayer,endLayer);
+  restart();
 
-  var connection = svg.append('svg:g').selectAll('path'),
-  connection = connection.data(layers_links);
+
+//  var connection = svg.append('svg:g').selectAll('path'),
+//  connection = connection.data(layers_links);
 
   if(connect === 1){
       connect = 0;
-      connection.attr('d', '');
+      path.attr('d', '');
       return;
   }
 
-  connection.enter().append('svg:path')
-    .attr('class', 'link')
-    .style('marker-start', function(d) { return d.left ? 'url(#start-arrow)' : ''; })
-    .style('marker-end', function(d) { return d.right ? 'url(#end-arrow)' : ''; })
+  // connection.enter().append('svg:path')
+  //   .attr('class', 'link')
+  //   .style('marker-start', function(d) { return d.left ? 'url(#start-arrow)' : ''; })
+  //   .style('marker-end', function(d) { return d.right ? 'url(#end-arrow)' : ''; })
 
 
-  connection.attr('d', function(d) {
+  path.attr('d', function(d) {
     var deltaX = d.target.x - d.source.x,
         deltaY = d.target.y - d.source.y,
         dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
