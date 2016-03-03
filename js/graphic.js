@@ -279,6 +279,7 @@ function restart() {
     //  if(!mousedown_node || d === mousedown_node) return;
       // enlarge target node
    //    d3.select(this).attr('transform', 'scale(1.1)');
+      if(!d3.event.ctrlKey) return;
 
       tooltip.transition().style('opacity', .9);
 
