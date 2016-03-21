@@ -16,12 +16,7 @@
 //     {source: nodes[1], target: nodes[2], left: false, right: true }
 //   ];
 
-var tooltip  = d3.select('body').append('div')
-    .attr('class', 'tooltip')
-    .style('position', 'absolute')
-    .style('padding','0 10px')
-    .style('background','white')
-    .style('opacity', 0);
+
 
 
 
@@ -281,7 +276,15 @@ function restart() {
    //    d3.select(this).attr('transform', 'scale(1.1)');
       if(!d3.event.altKey) return;
 
-      tooltip.transition().style('opacity', .9);
+      var tooltip  = d3.select('body').append('div')
+          .attr('class', 'tooltip')
+          .style('position', 'absolute')
+          .style('padding','0 10px')
+          .style('background','white')
+          .style('opacity', 9);
+
+
+      //tooltip.transition().style('opacity', .9);
 
       var content = "id: " + d.id + "\n" + "px: " + d.x + "\n" + "py: " + d.y;
 
@@ -294,8 +297,8 @@ function restart() {
       // unenlarge target node
     //  d3.select(this).attr('transform', '');
 
-      tooltip.transition().style('opacity', 0);
-
+    //  tooltip.transition().style('opacity', 0);
+        d3.select('div.tooltip').remove();
     })
     .on('mousedown', function(d) {
       if(d3.event.ctrlKey) return;
