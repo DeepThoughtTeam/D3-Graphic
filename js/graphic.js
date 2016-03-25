@@ -473,6 +473,7 @@ function keydown() {
   if(d3.event.keyCode === 17) {
     circle.call(force.drag);
     svg.classed('ctrl', true);
+
   }
 
   //alert
@@ -566,12 +567,12 @@ function generateLayers(){
     return;
   }
   content = content.substring(1, content.length-1);
-  layers = content.split(',')
-  for (i = 0; i < layers.length; i++){
+  temp = content.split(',')
+  for (i = 0; i < temp.length; i++){
     cur_layer = [];
-    len = parseInt(layers[i]);
+    len = parseInt(temp[i]);
     for (j = 0; j < len; j++){
-      node = {id: 0, reflexive: false};
+      node = {id: ++lastNodeId, reflexive: false};
       nodes.push(node);
       cur_layer.push(node);
     }
@@ -587,7 +588,7 @@ svg.on('mousedown', mousedown)
   .on('mousemove', mousemove)
   .on('mouseup', mouseup);
 
-d3.select(window)
+d3.select("#draw")
   .on('keydown', keydown)
   .on('keyup', keyup);
 restart();
@@ -633,11 +634,41 @@ function FullyConnect() {
       return;
   }
 
-  // connection.enter().append('svg:path')
-  //   .attr('class', 'link')
-  //   .style('marker-start', function(d) { return d.left ? 'url(#start-arrow)' : ''; })
-  //   .style('marker-end', function(d) { return d.right ? 'url(#end-arrow)' : ''; })
+  path.attr('d', function(d) {
+    var deltaX = d.target.x - d.source.x,
+        deltaY = d.target.y - d.source.y,
+        dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
+        normX = deltaX / dist,
+        normY = deltaY / dist,
+        sourcePadding = d.left ? 17 : 12,
+        targetPadding = d.right ? 17 : 12,
+        sourceX = d.source.x + (sourcePadding * normX),
+        sourceY = d.source.y + (sourcePadding * normY),
+        targetX = d.target.x - (targetPadding * normX),
+        targetY = d.target.y - (targetPadding * normY);
+    return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
+  });
 
+
+  connect = 1;
+
+}
+
+
+function FullyConnect(layerfrom, layerto) {
+
+  createLinks(layerfrom, layerto);
+  restart();
+
+
+//  var connection = svg.append('svg:g').selectAll('path'),
+//  connection = connection.data(layers_links);
+
+  if(connect === 1){
+      connect = 0;
+      path.attr('d', '');
+      return;
+  }
 
   path.attr('d', function(d) {
     var deltaX = d.target.x - d.source.x,
