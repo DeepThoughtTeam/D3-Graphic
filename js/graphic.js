@@ -583,17 +583,6 @@ function generateLayers(){
   }
 }
 
-// app starts here
-svg.on('mousedown', mousedown)
-  .on('mousemove', mousemove)
-  .on('mouseup', mouseup);
-
-d3.select("#draw")
-  .on('keydown', keydown)
-  .on('keyup', keyup);
-restart();
-
-
 
 //var layers_links = [];
 
@@ -618,41 +607,6 @@ function createLinks(layer_source, layer_target){
 
 
 var connect = 0;
-
-function FullyConnect() {
-
-  createLinks(startLayer,endLayer);
-  restart();
-
-
-//  var connection = svg.append('svg:g').selectAll('path'),
-//  connection = connection.data(layers_links);
-
-  if(connect === 1){
-      connect = 0;
-      path.attr('d', '');
-      return;
-  }
-
-  path.attr('d', function(d) {
-    var deltaX = d.target.x - d.source.x,
-        deltaY = d.target.y - d.source.y,
-        dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
-        normX = deltaX / dist,
-        normY = deltaY / dist,
-        sourcePadding = d.left ? 17 : 12,
-        targetPadding = d.right ? 17 : 12,
-        sourceX = d.source.x + (sourcePadding * normX),
-        sourceY = d.source.y + (sourcePadding * normY),
-        targetX = d.target.x - (targetPadding * normX),
-        targetY = d.target.y - (targetPadding * normY);
-    return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
-  });
-
-
-  connect = 1;
-
-}
 
 
 function FullyConnect(layerfrom, layerto) {
@@ -689,3 +643,15 @@ function FullyConnect(layerfrom, layerto) {
   connect = 1;
 
 }
+
+// app starts here
+svg.on('mousedown', mousedown)
+  .on('mousemove', mousemove)
+  .on('mouseup', mouseup);
+
+d3.select("#draw")
+  .on('keydown', keydown)
+  .on('keyup', keyup);
+restart();
+
+
