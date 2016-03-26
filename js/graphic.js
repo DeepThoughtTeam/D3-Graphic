@@ -18,11 +18,8 @@
 
 
 
-
-
 var nodes = [], lastNodeId = -1, links = [], layers = [];
-
-
+var currentObject = null;
 //==========================
 // set up SVG for D3
 //==========================
@@ -389,6 +386,7 @@ function restart() {
 }
 
 function mousedown() {
+
   // prevent I-bar on drag
   d3.event.preventDefault();
 
@@ -464,6 +462,9 @@ function spliceLinksForNode(node) {
 var lastKeyDown = -1;
 
 function keydown() {
+  if (currentObject != null){
+    return;
+  }
   d3.event.preventDefault();
 
   if(lastKeyDown !== -1) return;
@@ -532,6 +533,9 @@ function keydown() {
 }
 
 function keyup() {
+  if (currentObject != null){
+    return;
+  }
   lastKeyDown = -1;
   // ctrl
   if(d3.event.keyCode === 17) {
@@ -649,9 +653,17 @@ svg.on('mousedown', mousedown)
   .on('mousemove', mousemove)
   .on('mouseup', mouseup);
 
-d3.select("#draw")
+//d3.select("#draw")
+ d3.select('body')
   .on('keydown', keydown)
   .on('keyup', keyup);
 restart();
-
-
+d3.select('#layers')
+    .on("mouseover", function() {
+        currentObject = this;
+        d3.event.stopPropagation();
+    })
+    .on("mouseout", function() {
+        currentObject = null;
+        d3.event.stopPropagation();
+    });
