@@ -576,7 +576,8 @@ function generateLayers(){
     cur_layer = [];
     len = parseInt(temp[i]);
     for (j = 0; j < len; j++){
-      node = {id: ++lastNodeId, reflexive: false};
+      //node = {id: ++lastNodeId, reflexive: false};
+      node = {id: ++lastNodeId, reflexive: false, x:100+i*50, y:70+j*50};
       nodes.push(node);
       cur_layer.push(node);
     }
