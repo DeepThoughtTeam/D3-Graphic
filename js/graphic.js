@@ -123,7 +123,7 @@ function setStart(index){
 }
 function setEnd(index){
   endLayer = layers[index];
-  //FullyConnect(startLayer, endLayer);
+  FullyConnect(startLayer, endLayer);
 }
 
 
@@ -401,6 +401,8 @@ function mousedown() {
 
   node.x = point[0];
   node.y = point[1];
+  node.layer = -1;
+  node.sequenceid = -1;
 
   // avoid overlap nodes
   for(var i = 0; i< nodes.length; i++){
@@ -571,13 +573,18 @@ function generateLayers(){
     return;
   }
   content = content.substring(1, content.length-1);
-  temp = content.split(',')
-  for (i = 0; i < temp.length; i++){
+  temp = content.split(',');
+  num_layers = temp.length;
+
+  stepx = width / num_layers;
+
+  for (i = 0; i < num_layers; i++){
     cur_layer = [];
     len = parseInt(temp[i]);
     for (j = 0; j < len; j++){
       //node = {id: ++lastNodeId, reflexive: false};
-      node = {id: ++lastNodeId, reflexive: false, x:100+i*50, y:70+j*50};
+      stepy = height / len ;
+      node = {id: ++lastNodeId, reflexive: false, x:100+i*stepx, y:70+j*stepy, layer : i, sequenceid: j};
       nodes.push(node);
       cur_layer.push(node);
     }
