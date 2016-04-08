@@ -234,6 +234,7 @@ function restart() {
     .classed('selected', function(d) { return d === selected_link; })
     .style('marker-start', function(d) { return d.left ? 'url(#start-arrow)' : ''; })
     .style('marker-end', function(d) { return d.right ? 'url(#end-arrow)' : ''; })
+    .style('opacity', function(d){return d.opacity == 1 ? 1 : 0.5; })
     .on('mousedown', function(d) {
       if(d3.event.ctrlKey || d3.event.shiftKey) return;
       // select link
@@ -280,26 +281,46 @@ function restart() {
           .style('background','white')
           .style('opacity', 9);
 
+      d3.selectAll('circle').style('opacity', .5);
+      d3.select(this).style('opacity', 1);
 
-      //tooltip.transition().style('opacity', .9);
+      for(var i = 0; i< links.length; i++){
+          if(links[i].source.id != d.id){
+              links[i].opacity = 0;
+          }
+      }
 
+      path = path.data(links);
+      path.style('opacity', function(l){return l.opacity == 1 ? 1 : 0.5; });
       var content = "id: " + d.id + "\n" + "px: " + d.x + "\n" + "py: " + d.y;
 
       tooltip.html(content)
              .style('left', (d3.event.pageX) + 'px')
              .style('top', (d3.event.pageY) + 'px');
+
     })
     .on('mouseout', function(d) {
     //  if(!mousedown_node || d === mousedown_node) return;
       // unenlarge target node
     //  d3.select(this).attr('transform', '');
+        d3.selectAll('circle').style('opacity', 1);
 
     //  tooltip.transition().style('opacity', 0);
         d3.select('div.tooltip').remove();
+
+        for(var i = 0; i< links.length; i++){
+
+            if(links[i].source != d){
+                links[i].opacity = 1;
+            }
+        }
+
+        path = path.data(links);
+        path.style('opacity', function(l){return l.opacity == 1 ? 1 : 0.5; });
+
     })
     .on('mousedown', function(d) {
       if(d3.event.ctrlKey) return;
-
       if (d3.event.shiftKey) return;
 
       // select node
@@ -312,15 +333,15 @@ function restart() {
         selected_node = mousedown_node;
         //document.getElementById('view_select').innerHTML = JSON.stringify(selected_node, null, 1);
       }
-      selected_link = null;
+        selected_link = null;
 
       // reposition drag line
-      drag_line
+        drag_line
         .style('marker-end', 'url(#end-arrow)')
         .classed('hidden', false)
         .attr('d', 'M' + mousedown_node.x + ',' + mousedown_node.y + 'L' + mousedown_node.x + ',' + mousedown_node.y);
 
-      restart();
+        restart();
     })
     .on('mouseup', function(d) {
       if(!mousedown_node) return;
@@ -358,7 +379,7 @@ function restart() {
       if(link) {
         link[direction] = true;
       } else {
-        link = {source: source, target: target, left: false, right: false};
+        link = {source: source, target: target, left: false, right: false, opacity : 1};
         link[direction] = true;
         links.push(link);
       }
@@ -611,7 +632,8 @@ function createLinks(layer_source, layer_target){
               source : s,
               target : t,
               left : false,
-              right : true
+              right : true,
+              opacity : 1
             });
         }
    }
